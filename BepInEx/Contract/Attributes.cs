@@ -13,7 +13,7 @@ namespace Zwojnicow
 	/// This attribute denotes that a class is a plugin, and specifies the required metadata.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-	public class BepInPlugin : Attribute
+	public class DunHeroMod : Attribute
 	{
 		/// <summary>
 		/// The unique identifier of the plugin. Should not change between plugin versions.
@@ -35,7 +35,7 @@ namespace Zwojnicow
 		/// <param name="GUID">The unique identifier of the plugin. Should not change between plugin versions.</param>
 		/// <param name="Name">The user friendly name of the plugin. Is able to be changed between versions.</param>
 		/// <param name="Version">The specfic version of the plugin.</param>
-		public BepInPlugin(string GUID, string Name, string Version)
+		public DunHeroMod(string GUID, string Name, string Version)
 		{
 			this.GUID = GUID;
 			this.Name = Name;
@@ -50,14 +50,14 @@ namespace Zwojnicow
 			}
 		}
 
-		internal static BepInPlugin FromCecilType(TypeDefinition td)
+		internal static DunHeroMod FromCecilType(TypeDefinition td)
 		{
-			var attr = MetadataHelper.GetCustomAttributes<BepInPlugin>(td, false).FirstOrDefault();
+			var attr = MetadataHelper.GetCustomAttributes<DunHeroMod>(td, false).FirstOrDefault();
 
 			if (attr == null)
 				return null;
 
-			return new BepInPlugin((string)attr.ConstructorArguments[0].Value, (string)attr.ConstructorArguments[1].Value, (string)attr.ConstructorArguments[2].Value);
+			return new DunHeroMod((string)attr.ConstructorArguments[0].Value, (string)attr.ConstructorArguments[1].Value, (string)attr.ConstructorArguments[2].Value);
 		}
 	}
 
@@ -65,7 +65,7 @@ namespace Zwojnicow
 	/// This attribute specifies any dependencies that this plugin has on other plugins.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-	public class BepInDependency : Attribute, ICacheable
+	public class DunHeroDependency : Attribute, ICacheable
 	{
 		/// <summary>
 		/// Flags that are applied to a dependency
@@ -105,7 +105,7 @@ namespace Zwojnicow
 		/// </summary>
 		/// <param name="DependencyGUID">The GUID of the referenced plugin.</param>
 		/// <param name="Flags">The flags associated with this dependency definition.</param>
-		public BepInDependency(string DependencyGUID, DependencyFlags Flags = DependencyFlags.HardDependency)
+		public DunHeroDependency(string DependencyGUID, DependencyFlags Flags = DependencyFlags.HardDependency)
 		{
 			this.DependencyGUID = DependencyGUID;
 			this.Flags = Flags;
@@ -119,20 +119,20 @@ namespace Zwojnicow
 		/// <param name="DependencyGUID">The GUID of the referenced plugin.</param>
 		/// <param name="MinimumDependencyVersion">The minimum version of the referenced plugin.</param>
 		/// <remarks>When version is supplied the dependency is always treated as HardDependency</remarks>
-		public BepInDependency(string DependencyGUID, string MinimumDependencyVersion) : this(DependencyGUID)
+		public DunHeroDependency(string DependencyGUID, string MinimumDependencyVersion) : this(DependencyGUID)
 		{
 			MinimumVersion = new Version(MinimumDependencyVersion);
 		}
 
-		internal static IEnumerable<BepInDependency> FromCecilType(TypeDefinition td)
+		internal static IEnumerable<DunHeroDependency> FromCecilType(TypeDefinition td)
 		{
-			var attrs = MetadataHelper.GetCustomAttributes<BepInDependency>(td, true);
+			var attrs = MetadataHelper.GetCustomAttributes<DunHeroDependency>(td, true);
 			return attrs.Select(customAttribute =>
 			{
 				var dependencyGuid = (string)customAttribute.ConstructorArguments[0].Value;
 				var secondArg = customAttribute.ConstructorArguments[1].Value;
-				if (secondArg is string minVersion) return new BepInDependency(dependencyGuid, minVersion);
-				return new BepInDependency(dependencyGuid, (DependencyFlags)secondArg);
+				if (secondArg is string minVersion) return new DunHeroDependency(dependencyGuid, minVersion);
+				return new DunHeroDependency(dependencyGuid, (DependencyFlags)secondArg);
 			}).ToList();
 		}
 
@@ -155,7 +155,7 @@ namespace Zwojnicow
 	/// This attribute specifies other plugins that are incompatible with this plugin.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-	public class BepInIncompatibility : Attribute, ICacheable
+	public class DunHeroIncompatibility : Attribute, ICacheable
 	{
 		/// <summary>
 		/// The GUID of the referenced plugin.
@@ -167,18 +167,18 @@ namespace Zwojnicow
 		/// If the other plugin exists, this plugin will not be loaded and a warning will be shown.
 		/// </summary>
 		/// <param name="IncompatibilityGUID">The GUID of the referenced plugin.</param>
-		public BepInIncompatibility(string IncompatibilityGUID)
+		public DunHeroIncompatibility(string IncompatibilityGUID)
 		{
 			this.IncompatibilityGUID = IncompatibilityGUID;
 		}
 
-		internal static IEnumerable<BepInIncompatibility> FromCecilType(TypeDefinition td)
+		internal static IEnumerable<DunHeroIncompatibility> FromCecilType(TypeDefinition td)
 		{
-			var attrs = MetadataHelper.GetCustomAttributes<BepInIncompatibility>(td, true);
+			var attrs = MetadataHelper.GetCustomAttributes<DunHeroIncompatibility>(td, true);
 			return attrs.Select(customAttribute =>
 			{
 				var dependencyGuid = (string)customAttribute.ConstructorArguments[0].Value;
-				return new BepInIncompatibility(dependencyGuid);
+				return new DunHeroIncompatibility(dependencyGuid);
 			}).ToList();
 		}
 
@@ -197,7 +197,7 @@ namespace Zwojnicow
 	/// This attribute specifies which processes this plugin should be run for. Not specifying this attribute will load the plugin under every process.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-	public class BepInProcess : Attribute
+	public class DunHeroProcess : Attribute
 	{
 		/// <summary>
 		/// The name of the process that this plugin will run under.
@@ -205,15 +205,15 @@ namespace Zwojnicow
 		public string ProcessName { get; protected set; }
 
 		/// <param name="ProcessName">The name of the process that this plugin will run under.</param>
-		public BepInProcess(string ProcessName)
+		public DunHeroProcess(string ProcessName)
 		{
 			this.ProcessName = ProcessName;
 		}
 
-		internal static List<BepInProcess> FromCecilType(TypeDefinition td)
+		internal static List<DunHeroProcess> FromCecilType(TypeDefinition td)
 		{
-			var attrs = MetadataHelper.GetCustomAttributes<BepInProcess>(td, true);
-			return attrs.Select(customAttribute => new BepInProcess((string)customAttribute.ConstructorArguments[0].Value)).ToList();
+			var attrs = MetadataHelper.GetCustomAttributes<DunHeroProcess>(td, true);
+			return attrs.Select(customAttribute => new DunHeroProcess((string)customAttribute.ConstructorArguments[0].Value)).ToList();
 		}
 	}
 
@@ -243,26 +243,26 @@ namespace Zwojnicow
 		}
 
 		/// <summary>
-		/// Retrieves the BepInPlugin metadata from a plugin type.
+		/// Retrieves the DunHeroMod metadata from a plugin type.
 		/// </summary>
 		/// <param name="pluginType">The plugin type.</param>
-		/// <returns>The BepInPlugin metadata of the plugin type.</returns>
-		public static BepInPlugin GetMetadata(Type pluginType)
+		/// <returns>The DunHeroMod metadata of the plugin type.</returns>
+		public static DunHeroMod GetMetadata(Type pluginType)
 		{
-			object[] attributes = pluginType.GetCustomAttributes(typeof(BepInPlugin), false);
+			object[] attributes = pluginType.GetCustomAttributes(typeof(DunHeroMod), false);
 
 			if (attributes.Length == 0)
 				return null;
 
-			return (BepInPlugin)attributes[0];
+			return (DunHeroMod)attributes[0];
 		}
 
 		/// <summary>
-		/// Retrieves the BepInPlugin metadata from a plugin instance.
+		/// Retrieves the DunHeroMod metadata from a plugin instance.
 		/// </summary>
 		/// <param name="plugin">The plugin instance.</param>
-		/// <returns>The BepInPlugin metadata of the plugin instance.</returns>
-		public static BepInPlugin GetMetadata(object plugin)
+		/// <returns>The DunHeroMod metadata of the plugin instance.</returns>
+		public static DunHeroMod GetMetadata(object plugin)
 			=> GetMetadata(plugin.GetType());
 
 		/// <summary>
@@ -290,9 +290,9 @@ namespace Zwojnicow
 		/// </summary>
 		/// <param name="plugin">The plugin type.</param>
 		/// <returns>A list of all plugin types that the specified plugin type depends upon.</returns>
-		public static IEnumerable<BepInDependency> GetDependencies(Type plugin)
+		public static IEnumerable<DunHeroDependency> GetDependencies(Type plugin)
 		{
-			return plugin.GetCustomAttributes(typeof(BepInDependency), true).Cast<BepInDependency>();
+			return plugin.GetCustomAttributes(typeof(DunHeroDependency), true).Cast<DunHeroDependency>();
 		}
 	}
 

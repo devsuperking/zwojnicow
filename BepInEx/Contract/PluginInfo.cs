@@ -15,23 +15,23 @@ namespace Zwojnicow
 		/// <summary>
 		/// General metadata about a plugin.
 		/// </summary>
-		public BepInPlugin Metadata { get; internal set; }
+		public DunHeroMod Metadata { get; internal set; }
 
 		/// <summary>
-		/// Collection of <see cref="BepInProcess"/> attributes that describe what processes the plugin can run on.
+		/// Collection of <see cref="DunHeroProcess"/> attributes that describe what processes the plugin can run on.
 		/// </summary>
-		public IEnumerable<BepInProcess> Processes { get; internal set; }
+		public IEnumerable<DunHeroProcess> Processes { get; internal set; }
 
 		/// <summary>
-		/// Collection of <see cref="BepInDependency"/> attributes that describe what plugins this plugin depends on.
+		/// Collection of <see cref="DunHeroDependency"/> attributes that describe what plugins this plugin depends on.
 		/// </summary>
-		public IEnumerable<BepInDependency> Dependencies { get; internal set; }
+		public IEnumerable<DunHeroDependency> Dependencies { get; internal set; }
 
 		/// <summary>
-		/// Collection of <see cref="BepInIncompatibility"/> attributes that describe what plugins this plugin
+		/// Collection of <see cref="DunHeroIncompatibility"/> attributes that describe what plugins this plugin
 		/// is incompatible with.
 		/// </summary>
-		public IEnumerable<BepInIncompatibility> Incompatibilities { get; internal set; }
+		public IEnumerable<DunHeroIncompatibility> Incompatibilities { get; internal set; }
 
 		/// <summary>
 		/// File path to the plugin DLL
@@ -77,19 +77,19 @@ namespace Zwojnicow
 		{
 			TypeName = br.ReadString();
 
-			Metadata = new BepInPlugin(br.ReadString(), br.ReadString(), br.ReadString());
+			Metadata = new DunHeroMod(br.ReadString(), br.ReadString(), br.ReadString());
 
 			var processListCount = br.ReadInt32();
-			var processList = new List<BepInProcess>(processListCount);
+			var processList = new List<DunHeroProcess>(processListCount);
 			for (int i = 0; i < processListCount; i++)
-				processList.Add(new BepInProcess(br.ReadString()));
+				processList.Add(new DunHeroProcess(br.ReadString()));
 			Processes = processList;
 
 			var depCount = br.ReadInt32();
-			var depList = new List<BepInDependency>(depCount);
+			var depList = new List<DunHeroDependency>(depCount);
 			for (int i = 0; i < depCount; i++)
 			{
-				var dep = new BepInDependency("");
+				var dep = new DunHeroDependency("");
 				((ICacheable)dep).Load(br);
 				depList.Add(dep);
 			}
@@ -97,10 +97,10 @@ namespace Zwojnicow
 			Dependencies = depList;
 
 			var incCount = br.ReadInt32();
-			var incList = new List<BepInIncompatibility>(incCount);
+			var incList = new List<DunHeroIncompatibility>(incCount);
 			for (int i = 0; i < incCount; i++)
 			{
-				var inc = new BepInIncompatibility("");
+				var inc = new DunHeroIncompatibility("");
 				((ICacheable)inc).Load(br);
 				incList.Add(inc);
 			}

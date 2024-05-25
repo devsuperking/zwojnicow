@@ -20,10 +20,10 @@ namespace Zwojnicow
 				: Path.GetDirectoryName(executablePath);
 
 			ManagedPath = managedPath ?? Utility.CombinePaths(GameRootPath, $"{ProcessName}_Data", "Managed");
-			ZwojnicowRootPath = bepinRootPath ?? Path.Combine(GameRootPath, "Zwojnicow");
+			ZwojnicowRootPath = bepinRootPath ?? Path.Combine(GameRootPath, ".zwojnicow");
 			ConfigPath = Path.Combine(ZwojnicowRootPath, "config");
-			ZwojnicowConfigPath = Path.Combine(ConfigPath, "Zwojnicow.cfg");
-			PluginPath = Path.Combine(ZwojnicowRootPath, "plugins");
+			ZwojnicowConfigPath = Path.Combine(ConfigPath, "zwojnica.cfg");
+			PluginPath = Path.Combine(ZwojnicowRootPath, "mods");
 			PatcherPluginPath = Path.Combine(ZwojnicowRootPath, "patchers");
 			ZwojnicowAssemblyDirectory = Path.Combine(ZwojnicowRootPath, "core");
 			ZwojnicowAssemblyPath = Path.Combine(ZwojnicowAssemblyDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.dll");

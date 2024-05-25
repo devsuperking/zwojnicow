@@ -61,7 +61,7 @@ namespace Zwojnicow.Bootstrap
 		}
 		
 		/// <summary>
-		/// List of all <see cref="BepInPlugin"/> loaded via the chainloader.
+		/// List of all <see cref="DunHeroMod"/> loaded via the chainloader.
 		/// </summary>
 		[Obsolete("Use PluginInfos instead")]
 		public static List<BaseUnityPlugin> Plugins
@@ -200,7 +200,7 @@ namespace Zwojnicow.Bootstrap
 				return null;
 			}
 
-			var metadata = BepInPlugin.FromCecilType(type);
+			var metadata = DunHeroMod.FromCecilType(type);
 
 			// Perform checks that will prevent the plugin from being loaded in ALL cases
 			if (metadata == null)
@@ -227,9 +227,9 @@ namespace Zwojnicow.Bootstrap
 				return null;
 			}
 
-			var filters = BepInProcess.FromCecilType(type);
-			var dependencies = BepInDependency.FromCecilType(type);
-			var incompatibilities = BepInIncompatibility.FromCecilType(type);
+			var filters = DunHeroProcess.FromCecilType(type);
+			var dependencies = DunHeroDependency.FromCecilType(type);
+			var incompatibilities = DunHeroIncompatibility.FromCecilType(type);
 
 			var bepinVersion = type.Module.AssemblyReferences.FirstOrDefault(reference => reference.Name == "Zwojnicow")?.Version ?? new Version();
 
@@ -251,7 +251,7 @@ namespace Zwojnicow.Bootstrap
 		{
 			if (ass.MainModule.AssemblyReferences.All(r => r.Name != CurrentAssemblyName))
 				return false;
-			if (ass.MainModule.GetTypeReferences().All(r => r.FullName != typeof(BepInPlugin).FullName))
+			if (ass.MainModule.GetTypeReferences().All(r => r.FullName != typeof(DunHeroMod).FullName))
 				return false;
 
 			return true;
@@ -375,10 +375,10 @@ namespace Zwojnicow.Bootstrap
 						continue;
 
 					var dependsOnInvalidPlugin = false;
-					var missingDependencies = new List<BepInDependency>();
+					var missingDependencies = new List<DunHeroDependency>();
 					foreach (var dependency in pluginInfo.Dependencies)
 					{
-						bool IsHardDependency(BepInDependency dep) => (dep.Flags & BepInDependency.DependencyFlags.HardDependency) != 0;
+						bool IsHardDependency(DunHeroDependency dep) => (dep.Flags & DunHeroDependency.DependencyFlags.HardDependency) != 0;
 						
 						// If the dependency wasn't already processed, it's missing altogether
 						bool dependencyExists = processedPlugins.TryGetValue(dependency.DependencyGUID, out var pluginVersion);
